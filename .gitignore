@@ -1,0 +1,7 @@
+venv
+chrome-dir
+__pycache__
+.idea
+scraped_data
+done
+Python_jobs_actiris.csv
