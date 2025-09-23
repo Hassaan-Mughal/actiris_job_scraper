@@ -5,12 +5,12 @@ from selenium.webdriver.common.by import By
 from utils import (
     get_normal_driver, check_element_is_clickable,
     _read_done_set,create_xpath_1, clean_job_info,
-    create_xpath_2, safe_get_job_detail
+    create_xpath_2, safe_get_job_detail, safe_navigate_to_url
 )
 
 
 def main():
-    keyword = input("\nEnter the VDAB search keyword (e.g., python): ").strip().lower()
+    keyword = input("\nEnter the search keyword (e.g., python): ").strip().lower()
     output_dir = 'scraped_data'
     done_dir = 'done'
     os.makedirs(output_dir, exist_ok=True)
@@ -24,7 +24,7 @@ def main():
     driver = get_normal_driver()
     done_urls = _read_done_set(done_file_name)
     try:
-        driver.get(url)
+        safe_navigate_to_url(driver, url)
         while True:
             links = []  # Ensure links is always defined
             # Use explicit wait for job links
@@ -51,7 +51,7 @@ def main():
                 continue
             print(f"Processing URL: {link}")
             try:
-                driver.get(link)
+                safe_navigate_to_url(driver, link)
                 title = safe_get_job_detail(driver, (By.CSS_SELECTOR, "div.bloc-title > h1"), "text")
                 refrence = safe_get_job_detail(driver, (By.CSS_SELECTOR, "p.state > span"), "text").split(" ")[-1].strip()
                 created_at = safe_get_job_detail(driver, (By.CSS_SELECTOR, "p.state"), "text").split("|")[-1].strip()
